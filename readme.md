@@ -7,7 +7,8 @@ openweatherapi.
 
 Caveat emptor! A future release may find out your current location 
 using the ```<geo>``` html5 tag, to give you weather for your current location. This 
-**will not** be stored or sent to a remote location or sinister three-letter agency.
+**will not** be stored or sent to a remote location or sinister three-letter agency. You will be 
+prompted to allow this each time, by your browser itself.
 
 ## 1 Installation
 
