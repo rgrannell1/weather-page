@@ -3,20 +3,31 @@
 	'use strict'
 } )()
 
+
+
+
+
+
+
+
 var colour = {
-	white: 
+	clouds: 
 		"#ecf0f1",
-	blue: 
-		"#2980b9",
+	peterRiver: 
+		"#3498db",
 	yellow: 
 		"#f39c12",
-	black: 
+	midnightBlue: 
 		"#2c3e50",
-	red: 
+	alizarin: 
 		"#e74c3c",
 }
 
-var draw = {
+
+
+
+
+var redraw = {
 	time: function () {
 
 		var time = ( function () {
@@ -30,13 +41,13 @@ var draw = {
 			}
 
 			if (this.hours > 12) {
-				var end = "pm"
+				var suffix = "pm"
 				this.hours = this.hours - 12
 			} else {
-				var end = "am"
+				var suffix = "am"
 			}
 
-			return this.hours + ":" + this.mins + " " + end
+			return this.hours + ":" + this.mins + " " + suffix
 		} )()
 
 		$('#weather-time').text(time)
@@ -50,88 +61,128 @@ var draw = {
 			var celcius = Math.floor(weather.temp - 273.15)
 			
 			if (celcius < 0) {
-				this.background = colour.white
-				this.color = colour.black
+				this.backColour = colour.clouds
+				this.fontColour = colour.midnightBlue
 
 			} else if (celcius < 10) {
-				this.background = colour.blue
-				this.color = colour.white
+				this.backColour = colour.peterRiver
+				this.fontColour = colour.clouds
 			
 			} else if (celcius < 18) {
-				this.background = colour.yellow
-				this.color = colour.white
+				this.backColour = colour.yellow
+				this.fontColour = colour.clouds
 
 			} else if (celcius >= 18) {
-				this.background = colour.red
-				this.color = colour.white
+				this.backColour = colour.alizarin
+				this.fontColour = colour.clouds
 			}
 
 			$('#weather-city').text(weather.place)
 			$('#weather-temp').text(celcius + degreeSymbol)
 
 			$('html').
-				css('background-color', this.background)
-			$('html').
-				css('color', this.color)
+				css('background-color', this.backColour)
+			$('html *	').
+				css('color', this.fontColour)
 		}
 	} )()
 }
 
+
+
+
+
+
+
+
+
+
 // --------------------- send a request to openweathermap.
 
-var get_weather = function (location) {
-
-	$.ajax({
-		type: 'GET',
-		dataType: 'jsonp',
-		url: 
-			'http://api.openweathermap.org/data/2.5/weather?lat=' + 
-			location.latitude + "&lon=" + location.longitude,
-		success: function (weather) {
-
-			draw.weather({
-				temp: weather.main.temp.toFixed(1),
-				code:
-					weather.weather[0].id,
-				place: 
-					location.location
-			})
+var request = {
+	isOnline:
+		function () {
+			return navigator.onLine	
 		},
-		error: function (data) {
-			console.log(data.statusText)
-		}
-	})
+	getWeather:
+		function (location) {
+			/*
+				AJAX get the weather from openweathermap.
+			*/
+
+			var openWeatherURL = 'http://api.openweathermap.org/data/2.5/weather?lat=' + 
+					location.latitude + 
+					"&lon=" + 
+					location.longitude
+
+
+
+			if (request.isOnline()) {
+				$.ajax({
+					type: 'GET',
+					dataType: 'jsonp',
+					url: openWeatherURL,
+					success: function (weather) {
+
+						redraw.weather({
+							temp: 
+								weather.main.temp.toFixed(1),
+							code:
+								weather.weather[0].id,
+							place: 
+								location.location
+						})
+
+					},
+					error: function (msg) {
+						// log a grizzly error.
+
+						console.log(msg.statusText)
+					}
+				})				
+			} else {
+				console.log("not currently connected to the internet, friend :/")
+			}
+	}
 }
 
-
-var timer = function (seconds) {
+var stopwatch = function (seconds) {
+	// construct a 
 
 	var unixTime = function () {
-		return Math.round(new Date().getTime() / 1000.0);
+		return Math.round(new Date().getTime() / 1000.0)
 	}
 
-	var genesis = unixTime();
+
+
+	var genesis = unixTime()
 	
 	return function () {
-		var existedFor = unixTime() - genesis;
-		return existedFor > seconds;
+		var existedFor = unixTime() - genesis
+		return existedFor > seconds
 	}
 }
 
 var intervals = {
-	shouldDraw: 1000 * 5,
-	shouldRequest: timer(20)
+	shouldDraw: 
+		1000 * 5,
+	shouldRequest: 
+		stopwatch(20),
+	starting:
+		true
 }
 
-var updatePage = function () {
+var redrawPage = function () {
 
-	draw.time()
+	redraw.time()
+	console.log(1)
 
-	if (intervals.shouldRequest()) {
+	if (intervals.shouldRequest() || intervals.starting) {
 
-		intervals.shouldRequest = timer(20)
+		intervals.starting = false
+		intervals.shouldRequest = stopwatch(20)
 
-		get_weather({
+		request.getWeather({
 			latitude: 55,
 			longitude: 55,
 			location: "Galway City, Ireland."
@@ -139,5 +190,5 @@ var updatePage = function () {
 	}
 }
 
-updatePage()
-setInterval(updatePage, intervals.shouldDraw )
+redrawPage()
+setInterval(redrawPage, intervals.shouldDraw )

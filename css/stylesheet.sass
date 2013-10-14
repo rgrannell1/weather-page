@@ -1,4 +1,6 @@
 
+// colours. Most or all of these are from flat-ui colour palletes
+
 $wet-asphalt: #34495e
 $midnight-blue: #2c3e50
 
@@ -20,9 +22,7 @@ $green-sea: #16a085
 $peter-river: #3498db
 $belize-hole: #2980b9
 
-@font-face 
-	font-family: "weather-icofont"
-	src: url("../fonts/weather-icofont.ttf") format("truetype")
+// font faces. I obviously didn't create these.
 
 @font-face 
 	font-family: "Lato"
@@ -36,15 +36,13 @@ $belize-hole: #2980b9
 	font-family: "Helvneue"
 	src: url("../fonts/helvneue.ttf") format("truetype")
 
-@font-face 
-	font-family: "Coolvetica"
-	src: url("../fonts/coolvetica.ttf") format("truetype")
+// the actual stylesheet.
 
 html 
 	*
 		color: $clouds
 		font:
-			family: Lato, Sans
+			family: Lato
 			size: 29pt
 			weight: lighter
 		text-align: center
@@ -56,12 +54,7 @@ html
 	color: $clouds
 	font:
 		size: 210pt
-		family: Helvneue, Ariel
-
-#weather-icon
-	font:
-		family: "weather-icofont"
-		size: 300pt
+		family: Helvneue
 
 #weather-city
 	color: $clouds
