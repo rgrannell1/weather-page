@@ -1,9 +1,9 @@
 Weather-Page
 =======================================
 
-Weather-Page (my project names are nothing if not original) is a html + js + sass page for displaying the 
-current temperature. I made this to replace the default tab page for firefox and to play with
-openweatherapi.
+Weather-Page (my project names are nothing if not original) is a small html page for displaying the 
+current temperature. I made this to replace the default tab page for firefox and to 
+flex my RESTful muscles.
 
 Caveat emptor! A future release may find out your current location 
 using the ```<geo>``` html5 tag, to give you weather for your current location. This 
